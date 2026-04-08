@@ -15,3 +15,7 @@ def append_func(x):
    return x
 
 y = append_func(x)
+
+sum(y)
+len(x)
+len(y)
