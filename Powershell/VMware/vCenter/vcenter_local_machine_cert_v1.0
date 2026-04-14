@@ -1,0 +1,161 @@
+﻿
+<#
+SCOPE:
+    Replace vCenter Machine SSL certificate using a 3rd‑party CA. Supports vCenter 7.x and 8.x.
+
+RESOURCE: 
+https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/7-0/vcenter-upgrade/upgrading-and-updating-the-vcenter-server-appliance/preparing-to-upgrade-vcenter-server-appliance/prepare-esxi-hosts-for-vcenter-server-appliance-upgrade/change-the-certificate-mode.html?utm_source=copilot.com
+
+CREATOR: John William Braunsdorf
+
+DATE: 04/13/2026
+
+REV: v1.0
+
+#>
+
+# -------------------------------
+# VARIABLES
+# -------------------------------
+$vcenter = "vcsa01.example.com"
+$user    = "administrator@vsphere.local"
+$pass    = "YourPassword"
+
+# Certificate working directory
+$certPath = "C:\Temp"
+
+# Ensure directory exists
+if (-not (Test-Path $certPath)) {
+    New-Item -ItemType Directory -Path $certPath | Out-Null
+}
+
+# File paths
+$csrFile   = "$certPath\vcenter_machine_ssl.csr"
+$certFile  = "$certPath\machine_ssl.cer"
+$chainFile = "$certPath\ca_chain.cer"
+
+# Snapshot info
+$snapName = "Pre-MachineSSL-Replacement"
+$snapDesc = "Snapshot before replacing Machine SSL certificate"
+
+# -------------------------------
+# CONNECT TO VCENTER
+# -------------------------------
+Write-Host "Connecting to vCenter..."
+Connect-VIServer -Server $vcenter -User $user -Password $pass | Out-Null
+
+# -------------------------------
+# CREATE SNAPSHOT
+# -------------------------------
+Write-Host "Creating snapshot of vCenter VM..."
+$vcVM = Get-VM -Name $vcenter
+
+$snapshot = New-Snapshot -VM $vcVM -Name $snapName -Description $snapDesc -Quiesce:$false -Memory:$true
+Write-Host "Snapshot created: $snapName"
+
+# -------------------------------
+# CREATE CIS SESSION
+# -------------------------------
+$session = Get-CisService -Name "com.vmware.cis.session"
+$sessionId = $session.create()
+
+$certSvc = Get-CisService -Name "com.vmware.vcenter.certificate_management.vcenter"
+
+# -------------------------------
+# GENERATE CSR
+# -------------------------------
+Write-Host "Generating CSR on vCenter..."
+
+$csrSpec = @{
+    subject = @{
+        common_name        = $vcenter
+        organization       = "ExampleCorp"
+        organization_unit  = "IT"
+        locality           = "San Diego"
+        state_or_province  = "CA"
+        country            = "US"
+    }
+    key_size  = 2048
+    algorithm = "RSA"
+}
+
+$csr = $certSvc.generate_csr($csrSpec)
+$csr.csr | Out-File $csrFile -Encoding ascii
+
+Write-Host "CSR saved to: $csrFile"
+Write-Host "Submit CSR to your CA and place the signed files in:"
+Write-Host "  $certFile"
+Write-Host "  $chainFile"
+Read-Host "Press ENTER once the signed certificate and chain are ready"
+
+# -------------------------------
+# ATTEMPT CERTIFICATE REPLACEMENT
+# -------------------------------
+Write-Host "Uploading signed certificate and chain..."
+
+$replacementSuccess = $false
+
+try {
+    $certData  = Get-Content $certFile -Raw
+    $chainData = Get-Content $chainFile -Raw
+
+    $replaceSpec = @{
+        certificate = $certData
+        ca_chain    = @($chainData)
+    }
+
+    $certSvc.replace($replaceSpec)
+
+    Write-Host "Certificate uploaded. Waiting for vCenter services..."
+    Start-Sleep -Seconds 20
+
+    # Verify certificate
+    $info = $certSvc.get()
+
+    if (-not $info.certificate) {
+        throw "Certificate replacement did not return valid certificate info."
+    }
+
+    Write-Host "SUCCESS: Machine SSL certificate replaced."
+    $replacementSuccess = $true
+}
+catch {
+    Write-Host "ERROR: Certificate replacement failed."
+}
+
+# -------------------------------
+# POST‑REPLACEMENT DECISION
+# -------------------------------
+Write-Host ""
+Write-Host "Snapshot Options:"
+Write-Host "  1 = Keep snapshot"
+Write-Host "  2 = Remove snapshot"
+Write-Host "  3 = Revert (rollback) to snapshot"
+Write-Host ""
+
+$choice = Read-Host "Choose an option (1/2/3)"
+
+switch ($choice) {
+    "1" {
+        Write-Host "Snapshot retained for safety."
+    }
+    "2" {
+        Write-Host "Removing snapshot..."
+        Remove-Snapshot -Snapshot $snapshot -Confirm:$false
+        Write-Host "Snapshot removed."
+    }
+    "3" {
+        Write-Host "Reverting to snapshot..."
+        Set-VM -VM $vcVM -Snapshot $snapshot -Confirm:$false | Out-Null
+        Write-Host "Rollback complete. vCenter restored to pre-change state."
+    }
+    default {
+        Write-Host "Invalid choice. Snapshot retained."
+    }
+}
+
+# Closes ALL VMware VI connections - leaving NOTHING open
+if ((Read-Host "Do you wan to close your VIServer Connection? (y/n)") -ne 'y') { return }
+
+Write-host "Closing all VI Sessions" -BackgroundColor White -ForegroundColor DarkBlue
+Disconnect-VIServer -Server * -Force -Confirm:$false
