@@ -1,4 +1,5 @@
 - vCenter data collection
+try to NEVER EVER embed any username and password in your programs
 
 | Piece | What it does | How often |
 | --- | --- | --- |
