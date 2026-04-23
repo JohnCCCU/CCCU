@@ -1,5 +1,5 @@
 <#
-SCOPE: Create New CSR request for ESXi Hosts, using OpenSSL format. 
+SCOPE: GUI interface - Create New CSR request for ESXi Hosts, using OpenSSL format. 
     - Output is set for C:\temp\CSR\OpenSSL, but create a browse feature to place certs were ever.
     - Req, v3_Req and Req_distinguished_name are all accounted for 
 
