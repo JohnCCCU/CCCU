@@ -1,3 +1,22 @@
+    ' -------------------------------
+    ' BUILD JIRA PAYLOAD
+    ' -------------------------------
+    jiraSummary = "Phishing Alert - " & objItem.Subject
+    jiraDescription = "Sender: " & objItem.SenderName & vbCrLf & _
+                      "Subject: " & objItem.Subject & vbCrLf & _
+                      "Received: " & objItem.ReceivedTime & vbCrLf & vbCrLf & _
+                      "Original email content included in Outlook notification."
+
+    ' -------------------------------
+    ' JIRA API CALL
+    ' -------------------------------
+    url = "https://YOURDOMAIN.atlassian.net/rest/api/3/issue"
+
+    jsonBody = "{""fields"": {""project"": {""key"": ""SEC""}," & _
+               """summary"": """ & jiraSummary & """," & _
+               """description"": """ & jiraDescription & """," & _
+               """issuetype"": {""name"": ""Task""}}}"
+
 
 Placeholder	            Replace With
 YOURDOMAIN	            Your Jira Cloud domain (e.g., company.atlassian.net)
