@@ -1,8 +1,10 @@
-📄 <span style="color:red">Unified Software License + California Addendum
-(Original, non‑copyrighted license text — safe to publish in full)</span>
+<div align="center">
 
-📄 Unified Software License + California Addendum
-(Original, non‑copyrighted license text — safe to publish in full)
+# 📄 Unified Software License + California Addendum
+*(Original, non‑copyrighted license text — safe to publish in full)*
+
+</div>
+
 
 1. Permission Grant
 You are granted a worldwide, royalty‑free, non‑exclusive license to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of this Software, subject to the conditions in this License and the California Addendum below.
