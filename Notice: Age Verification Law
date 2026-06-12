@@ -1,0 +1,81 @@
+California’s New Software Age Verification Requirements
+Understanding the Digital Age Assurance Act (AB‑1043)
+
+Today
+I would like to create a Github readme file about the following topic
+
+California’s New Software Age Verification Requirements
+California’s Digital Age Assurance Act (AB-1043), signed by Governor Gavin Newsom on October 13, 2025, introduces mandatory age verification rules for software applications. The law takes effect January 1, 2027
+Below is a polished, production‑ready GitHub README you can drop directly into a repository. It’s structured, scannable, and written in a way that helps developers quickly understand California’s new age‑verification law and how it affects software teams.
+
+I’ve also added a visual reference carousel to make the README feel more complete and professional.
+
+California’s New Software Age Verification Requirements
+Understanding the Digital Age Assurance Act (AB‑1043)
+
+📌 Overview
+California’s Digital Age Assurance Act (AB‑1043)—signed by Governor Gavin Newsom on October 13, 2025—creates the state’s first mandatory software age‑verification requirements. The law applies to a wide range of digital products and takes effect January 1, 2027.
+
+At its core, AB‑1043 requires software companies to implement reasonable, privacy‑preserving methods to determine whether a user is a minor before granting access to certain features, content, or services.
+
+🚀 Key Provisions
+Mandatory age verification — Apps must implement an age‑assurance mechanism when offering content or features that could reasonably pose risks to minors.
+
+Privacy‑preserving requirements — Verification methods must collect the minimum necessary data and avoid creating persistent identifiers tied to minors.
+
+Risk‑based obligations — Higher‑risk features (e.g., social interaction, content sharing, location visibility) require stronger age‑assurance methods.
+
+Developer compliance duties — Companies must document their age‑assurance approach, maintain internal policies, and ensure third‑party tools meet California’s standards.
+
+Enforcement & penalties — The California Attorney General may enforce violations, with potential civil penalties for non‑compliance.
+
+🧩 Who Must Comply
+AB‑1043 applies to:
+
+Software applications (mobile, desktop, web)
+
+Online platforms
+
+Digital services targeting or accessible to minors
+
+If your product is accessible to California users, you are likely within scope.
+
+🔐 Acceptable Age‑Assurance Methods
+The law does not mandate a single technology but allows several approaches, including:
+
+Third‑party age‑verification providers
+
+Device‑level age signals
+
+Zero‑knowledge proofs
+
+Government‑issued ID checks
+
+Trusted parental consent flows
+
+Each method must meet California’s privacy and data‑minimization standards.
+
+🛠 Implementation Checklist
+To prepare for the January 1, 2027 deadline, teams should:
+
+Assess product features to determine which require age assurance
+
+Select a compliant verification method
+
+Update privacy policies to reflect new data practices
+
+Document internal processes for audits or enforcement inquiries
+
+Train engineering and support teams on new requirements
+
+📅 Timeline
+
+Date	              Requirement
+13-Oct-25           AB‑1043 signed into law
+2026                Guidance expected from California regulators
+1-Jan-27            Law takes effect; enforcement begins
+
+📚 Additional Resources - searchable
+1. California Legislative Information
+2. Age‑Assurance Technology Standards
+3. Privacy‑by‑design best practices
