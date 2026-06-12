@@ -1,3 +1,6 @@
+📄 <span style="color:red">Unified Software License + California Addendum
+(Original, non‑copyrighted license text — safe to publish in full)</span>
+
 📄 Unified Software License + California Addendum
 (Original, non‑copyrighted license text — safe to publish in full)
 
